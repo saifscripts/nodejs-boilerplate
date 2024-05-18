@@ -3,20 +3,31 @@ import { IUser, IUserMethods, UserModel } from './user.interface';
 import bcrypt from 'bcrypt';
 import config from '../../config';
 
-const userSchema = new Schema<IUser, UserModel, IUserMethods>({
-  name: { type: String, required: true },
-  gender: { type: String, enum: ['male', 'female'] },
-  mobile: String,
-  email: { type: String, required: true },
-  password: { type: String, required: true },
-  confirmPassword: { type: String, required: true },
-  role: { type: String, enum: ['user', 'admin'], required: true },
-  status: { type: String, enum: ['active', 'blocked'], required: true },
-  avatarURL: String,
-  isDeleted: {
-    type: Boolean,
-    default: false,
+const userSchema = new Schema<IUser, UserModel, IUserMethods>(
+  {
+    name: { type: String, required: true },
+    gender: { type: String, enum: ['male', 'female'] },
+    mobile: String,
+    email: { type: String, required: true },
+    password: { type: String, required: true },
+    confirmPassword: { type: String, required: true },
+    role: { type: String, enum: ['user', 'admin'], required: true },
+    status: { type: String, enum: ['active', 'blocked'], required: true },
+    avatarURL: String,
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
+  {
+    toJSON: {
+      virtuals: true,
+    },
+  },
+);
+
+userSchema.virtual('fullName').get(function () {
+  return 'Mr. ' + this.name;
 });
 
 userSchema.pre('save', async function (next) {

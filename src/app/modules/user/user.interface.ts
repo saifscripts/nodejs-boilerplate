@@ -10,6 +10,7 @@ export interface IUser {
   role: 'user' | 'admin';
   status: 'active' | 'blocked';
   avatarURL?: string;
+  isDeleted: boolean;
 }
 
 // interface for mongoose methods

@@ -13,6 +13,10 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
   role: { type: String, enum: ['user', 'admin'], required: true },
   status: { type: String, enum: ['active', 'blocked'], required: true },
   avatarURL: String,
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 userSchema.pre('save', async function (next) {
@@ -26,6 +30,16 @@ userSchema.pre('save', async function (next) {
 
 userSchema.post('save', function (doc, next) {
   doc.password = '';
+  next();
+});
+
+userSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+userSchema.pre('findOne', function (next) {
+  this.find({ isDeleted: { $ne: true } });
   next();
 });
 

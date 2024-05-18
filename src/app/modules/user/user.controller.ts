@@ -29,10 +29,10 @@ const getSingleUser = async (req: Request, res: Response) => {
       message: 'User is retrieved successfully.',
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({
       success: false,
-      message: 'Failed to retrieve user.',
+      message: error.message || 'Something went wrong.',
     });
   }
 };
@@ -46,10 +46,28 @@ const getAllUsers = async (req: Request, res: Response) => {
       message: 'Users are retrieved successfully.',
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({
       success: false,
-      message: 'Failed to retrieve users.',
+      message: error.message || 'Something went wrong.',
+    });
+  }
+};
+
+const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await userServices.deleteUserFromDB(id);
+
+    res.status(200).json({
+      success: true,
+      message: 'User is deleted successfully.',
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: error.message || 'Something went wrong.',
     });
   }
 };
@@ -58,4 +76,5 @@ export const userControllers = {
   createUser,
   getSingleUser,
   getAllUsers,
+  deleteUser,
 };

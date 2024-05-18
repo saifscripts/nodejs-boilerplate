@@ -24,9 +24,9 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-userSchema.post('save', async function () {
-  const user: IUser = this;
-  user.password = '';
+userSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
 });
 
 userSchema.methods.isEmailExists = async function (email) {
